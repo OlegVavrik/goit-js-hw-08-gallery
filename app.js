@@ -137,4 +137,4 @@ function onArrowRight() {
 function newSrc(index, step = 0) {
   modalImg.dataset.index = `${index + step}`;
   modalImg.src = galleryItems[index + step].original;
-}
+};
