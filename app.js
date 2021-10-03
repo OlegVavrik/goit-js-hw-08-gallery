@@ -92,6 +92,7 @@ const onKeyboardClick = e => {
   if (e.key === 'Escape') {
     modal.classList.remove('is-open');
   }
+  
 };
 
 const onCloseModalClick = e => {
@@ -103,10 +104,10 @@ const onCloseModalClick = e => {
   }
 };
 
-galleryList.addEventListener('click', onOpenModalClick);
+window.addEventListener('click', onOpenModalClick);
 window.addEventListener('keyup', onKeyboardClick);
 window.addEventListener('click', onCloseModalClick);
-window.removeEventListener('click', onCloseModalClick);
+window.removeEventListener('click', onKeyboardClick);
 
 window.addEventListener('keydown', e => {
   if (e.code === 'ArrowLeft') {
