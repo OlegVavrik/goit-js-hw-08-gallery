@@ -106,6 +106,7 @@ const onCloseModalClick = e => {
 galleryList.addEventListener('click', onOpenModalClick);
 window.addEventListener('keyup', onKeyboardClick);
 window.addEventListener('click', onCloseModalClick);
+window.removeEventListener('click', onCloseModalClick);
 
 window.addEventListener('keydown', e => {
   if (e.code === 'ArrowLeft') {
