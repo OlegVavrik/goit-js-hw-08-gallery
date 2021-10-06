@@ -66,8 +66,10 @@ const galleryItems = [
 
 const galleryList = document.querySelector(".js-gallery");
 const modalImg = document.querySelector(".lightbox__image");
-const modal = document.querySelector(".lightbox");
+const modal = document.querySelector(".js-lightbox");
 const button = document.querySelector(".lightbox__button");
+const backdrop = document.querySelector('.lightbox__overlay');
+const closeBtn = document.querySelector('[data-action="close-lightbox"]');
 
 const markup = galleryItems.map(({preview, original, description}, index) => `<li class="gallery__item">
       <a class="gallery__link" href=''>
@@ -75,68 +77,37 @@ const markup = galleryItems.map(({preview, original, description}, index) => `<l
 )
   .join('');
 
-galleryList.innerHTML = markup;
+galleryList.insertAdjacentHTML("afterbegin", markup);
 
-const onOpenModalClick = e => {
-  e.preventDefault();
+galleryList.addEventListener('click', onOpenModalClick);
+closeBtn.addEventListener('click', onCloseModalClick)
+modal.addEventListener('click', onBackdropClick);
 
-  if (e.target.localName === 'img') {
-    modalImg.src = e.target.dataset.source;
-    modalImg.alt = e.target.alt;
-    modalImg.dataset.index = e.target.dataset.index;
-    modal.classList.add('is-open');
-  }
-};
-
-const onKeyboardClick = e => {
-  if (e.key === 'Escape') {
-    modal.classList.remove('is-open');
-  }
-  
-};
-
-const onCloseModalClick = e => {
-  if (e.target.localName !== 'img') {
-    modal.classList.remove('is-open');
-
-    modalImg.src = '';
-    modalImg.alt = '';
-  }
-};
-
-window.addEventListener('click', onOpenModalClick);
-window.addEventListener('keyup', onKeyboardClick);
-window.addEventListener('click', onCloseModalClick);
-window.removeEventListener('click', onKeyboardClick);
-
-window.addEventListener('keydown', e => {
-  if (e.code === 'ArrowLeft') {
-    onArrowLeft();
-  }
-  if (e.code === 'ArrowRight') {
-    onArrowRight();
-  }
-});
-
-function onArrowLeft() {
-  let index =+ modalImg.dataset.index;
-  if (index === 0) {
-    newSrc(galleryItems.length - 1);
+function onOpenModalClick(event) {
+  event.preventDefault();
+  if (!event.target.classList.contains('gallery__image')) {
     return;
   }
-  newSrc(index, -1);
+  window.addEventListener('keydown', onKeyboardClick);
+  modal.classList.add('is-open');
+  modalImg.src = event.target.dataset.source;
 };
 
-function onArrowRight() {
-  let index = + modalImg.dataset.index;
-  if (index === galleryItems.length - 1) {
-    newSrc(0);
-    return;
+function onCloseModalClick() {
+  modal.classList.remove('is-open');
+  window.removeEventListener('keydown', onKeyboardClick);
+  modalImg.src = '';
+};
+
+function onBackdropClick(event) {
+  if (backdrop === event.target) {
+    onCloseModalClick();
   }
-  newSrc(index, 1);
 };
 
-function newSrc(index, step = 0) {
-  modalImg.dataset.index = `${index + step}`;
-  modalImg.src = galleryItems[index + step].original;
+function onKeyboardClick(event) {
+  if (event.code === 'Escape') {
+    onCloseModalClick();
+  }
 };
+
